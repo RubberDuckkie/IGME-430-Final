@@ -14,7 +14,6 @@ const teamPage = (req, res) => {
 
 const makeUnit = (req, res) => {
     if(!req.body.name || !req.body.vision || !req.body.level) {
-        alert('Name, vision, and level are required');
         return res.status(400).json({error: 'Name, vision, and level are required'});
     }
 
