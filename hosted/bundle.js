@@ -2,11 +2,8 @@
 
 var handleUnit = function handleUnit(e) {
   e.preventDefault();
-  $("#unitMessage").animate({
-    width: 'hide'
-  }, 350);
 
-  if ($("unitName").val() == '' || $("#unitVision").val() == '' || $("#unitLevel").val() == '') {
+  if ($("unitName").val() == '' || $("#unitVision").val() == '' || $("#unitLevel").val() == '' || $("#unitWeapon").val() == '') {
     handleError("All fields are required");
     return false;
   }
@@ -46,6 +43,20 @@ var UnitForm = function UnitForm(props) {
     type: "text",
     name: "level",
     placeholder: "Unit Level"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "weapon"
+  }, "Weapon: "), /*#__PURE__*/React.createElement("input", {
+    id: "unitWeapon",
+    type: "text",
+    name: "name",
+    placeholder: "Unit Weapon"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "artifact"
+  }, "Artifact: "), /*#__PURE__*/React.createElement("input", {
+    id: "unitArtifact",
+    type: "text",
+    name: "artifact",
+    placeholder: "Unit Artifact"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
@@ -55,6 +66,18 @@ var UnitForm = function UnitForm(props) {
     type: "submit",
     value: "Make Unit"
   }));
+};
+
+var handleDeleteClick = function handleDeleteClick(e) {
+  var method = "DELETE";
+  var path = "/delete-unit";
+  var unitId = e.currentTarget.getAttribute("unitid");
+  var _csrf = document.querySelector("input[name='_csrf']").value;
+  var query = "_csrf=".concat(_csrf, "&unitId=").concat(unitId);
+  var completionCallback = loadUnitsFromServer;
+  sendAjax('GET', $("unitForm").attr("action"), $("#unitForm").serialize(), function () {
+    loadUnitsFromServer();
+  });
 };
 
 var UnitList = function UnitList(props) {
@@ -71,16 +94,23 @@ var UnitList = function UnitList(props) {
       key: unit._id,
       className: "unit"
     }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/favicon.png",
+      src: "/Media/imgs/primogem.png",
       alt: "primogem",
       className: "unitFace"
     }), /*#__PURE__*/React.createElement("h3", {
-      className: "unitname"
-    }, "Name: ", unit.name), /*#__PURE__*/React.createElement("h3", {
+      className: "unitName"
+    }, " Name: ", unit.name, " "), /*#__PURE__*/React.createElement("h3", {
       className: "unitVision"
-    }, "Vision: ", unit.vision), /*#__PURE__*/React.createElement("h3", {
+    }, " Vision: ", unit.vision, " "), /*#__PURE__*/React.createElement("h3", {
       className: "unitLevel"
-    }, "Level: ", unit.level));
+    }, " Level: ", unit.level, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "unitWeapon"
+    }, " Weapon: ", unit.weapon, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "unitArtifact"
+    }, " Artifact: ", unit.artifact, " "), /*#__PURE__*/React.createElement("button", {
+      className: "btnDelete",
+      onClick: handleDeleteClick
+    }, "Delete"));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "unitList"

@@ -26,6 +26,18 @@ const UnitSchema = new mongoose.Schema({
         min: 1,
         required: true,
     },
+
+    weapon: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+
+    artifact: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     
 });
 

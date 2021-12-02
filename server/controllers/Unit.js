@@ -1,3 +1,4 @@
+const { response } = require('express');
 const models = require('../models');
 
 const Unit = models.Unit;
@@ -53,6 +54,14 @@ const getUnits = (request, response) => {
         return res.json({ units: docs});
     });
 };
+
+
+const deleteUnit = (request, response) => {
+    
+
+
+}
+
 
 
 module.exports.teamPage = teamPage;
