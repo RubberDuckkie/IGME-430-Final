@@ -22,41 +22,26 @@ var UnitForm = function UnitForm(props) {
     action: "/maker",
     method: "POST",
     className: "unitForm"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "name"
-  }, "Name: "), /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("input", {
     id: "unitName",
     type: "text",
     name: "name",
     placeholder: "Unit Name"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "vision"
-  }, "Vision: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("input", {
     id: "unitVision",
     type: "text",
     name: "vision",
     placeholder: "Unit Vision"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "level"
-  }, "Level: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("input", {
     id: "unitLevel",
     type: "text",
     name: "level",
     placeholder: "Unit Level"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "weapon"
-  }, "Weapon: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("input", {
     id: "unitWeapon",
     type: "text",
-    name: "name",
+    name: "weapon",
     placeholder: "Unit Weapon"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "artifact"
-  }, "Artifact: "), /*#__PURE__*/React.createElement("input", {
-    id: "unitArtifact",
-    type: "text",
-    name: "artifact",
-    placeholder: "Unit Artifact"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
@@ -66,18 +51,6 @@ var UnitForm = function UnitForm(props) {
     type: "submit",
     value: "Make Unit"
   }));
-};
-
-var handleDeleteClick = function handleDeleteClick(e) {
-  var method = "DELETE";
-  var path = "/delete-unit";
-  var unitId = e.currentTarget.getAttribute("unitid");
-  var _csrf = document.querySelector("input[name='_csrf']").value;
-  var query = "_csrf=".concat(_csrf, "&unitId=").concat(unitId);
-  var completionCallback = loadUnitsFromServer;
-  sendAjax('GET', $("unitForm").attr("action"), $("#unitForm").serialize(), function () {
-    loadUnitsFromServer();
-  });
 };
 
 var UnitList = function UnitList(props) {
@@ -105,12 +78,25 @@ var UnitList = function UnitList(props) {
       className: "unitLevel"
     }, " Level: ", unit.level, " "), /*#__PURE__*/React.createElement("h3", {
       className: "unitWeapon"
-    }, " Weapon: ", unit.weapon, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "unitArtifact"
-    }, " Artifact: ", unit.artifact, " "), /*#__PURE__*/React.createElement("button", {
-      className: "btnDelete",
-      onClick: handleDeleteClick
-    }, "Delete"));
+    }, " Weapon: ", unit.weapon, " "), /*#__PURE__*/React.createElement("form", {
+      id: "unitDeleteForm",
+      onSubmit: deleteUnit,
+      name: "unitDeleteForm",
+      action: "/delete",
+      method: "DELETE"
+    }, /*#__PURE__*/React.createElement("input", {
+      className: "makeUnitSubmit",
+      type: "submit",
+      value: "Delete Unit"
+    }), /*#__PURE__*/React.createElement("input", {
+      type: "hidden",
+      name: "_id",
+      value: unit._id
+    }), /*#__PURE__*/React.createElement("input", {
+      type: "hidden",
+      name: "_csrf",
+      value: props.csrf
+    })));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "unitList"
@@ -118,10 +104,13 @@ var UnitList = function UnitList(props) {
 };
 
 var loadUnitsFromServer = function loadUnitsFromServer() {
-  sendAjax('GET', '/getUnits', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(UnitList, {
-      units: data.units
-    }), document.querySelector("#units"));
+  sendAjax('GET', '/getToken', null, function (result) {
+    sendAjax('GET', '/getUnits', null, function (data) {
+      ReactDOM.render( /*#__PURE__*/React.createElement(UnitList, {
+        units: data.units,
+        csrf: result.csrfToken
+      }), document.querySelector("#units"));
+    });
   });
 };
 
@@ -139,6 +128,17 @@ var getToken = function getToken() {
   sendAjax('Get', '/getToken', null, function (result) {
     setup(result.csrfToken);
   });
+};
+
+var deleteUnit = function deleteUnit(e) {
+  e.preventDefault();
+  sendAjax('DELETE', $("#unitDeleteForm").attr("action"), {
+    _id: e.target._id.value,
+    _csrf: e.target._csrf.value
+  }, function () {
+    loadUnitsFromServer();
+  });
+  return false;
 };
 
 $(document).ready(function () {

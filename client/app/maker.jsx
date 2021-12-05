@@ -2,6 +2,7 @@ const handleUnit = (e) => {
     e.preventDefault();
 
     if ($("unitName").val() == '' || $("#unitVision").val() == '' || $("#unitLevel").val() == '' || $("#unitWeapon").val() == '') {
+        
         handleError("All fields are required");
         return false;
     }
@@ -15,45 +16,32 @@ const handleUnit = (e) => {
 
 const UnitForm = (props) => {
     return (
+        
         <form id="unitForm" onSubmit={handleUnit}
             name="unitForm"
             action="/maker"
             method="POST"
             className="unitForm"
         >
-            <label htmlFor="name">Name: </label>
+
             <input id="unitName" type="text" name="name" placeholder="Unit Name" />
-            <label htmlFor="vision">Vision: </label>
             <input id="unitVision" type="text" name="vision" placeholder="Unit Vision" />
-            <label htmlFor="level">Level: </label>
             <input id="unitLevel" type="text" name="level" placeholder="Unit Level" />
-            <label htmlFor="weapon">Weapon: </label>
-            <input id="unitWeapon" type="text" name="name" placeholder="Unit Weapon" />
-            <label htmlFor="artifact">Artifact: </label>
-            <input id="unitArtifact" type="text" name="artifact" placeholder="Unit Artifact" />
+            <input id="unitWeapon" type="text" name="weapon" placeholder="Unit Weapon" />
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="makeUnitSubmit" type="submit" value="Make Unit" />
 
         </form>
 
+
     );
 };
 
-const handleDeleteClick = (e) => {
-        const method = "DELETE";
-        const path = "/delete-unit";
-        const unitId = e.currentTarget.getAttribute("unitid");
-        const _csrf = document.querySelector("input[name='_csrf']").value;
-        const query = `_csrf=${_csrf}&unitId=${unitId}`;
-        const completionCallback = loadUnitsFromServer;
-        sendAjax('GET', $("unitForm").attr("action"), $("#unitForm").serialize(), function () {
-            loadUnitsFromServer();
-        });
-    }
 
 
 
 const UnitList = function (props) {
+    
     if (props.units.length === 0) {
         return (
             <div className="unitList">
@@ -62,10 +50,10 @@ const UnitList = function (props) {
         );
     }
 
-    
 
 
     const unitNodes = props.units.map(function (unit) {
+        
         return (
             <div key={unit._id} className="unit">
                 <img src="/Media/imgs/primogem.png" alt="primogem" className="unitFace" />
@@ -73,9 +61,19 @@ const UnitList = function (props) {
                 <h3 className="unitVision"> Vision: {unit.vision} </h3>
                 <h3 className="unitLevel"> Level: {unit.level} </h3>
                 <h3 className="unitWeapon"> Weapon: {unit.weapon} </h3>
-                <h3 className="unitArtifact"> Artifact: {unit.artifact} </h3>
-                <button className="btnDelete" onClick={handleDeleteClick}>Delete</button>
+                <form id="unitDeleteForm"
+                    onSubmit={deleteUnit}
+                    name="unitDeleteForm"
+                    action="/delete"
+                    method="DELETE"
+                >
+                    <input className="makeUnitSubmit" type="submit" value="Delete Unit" />
+                    <input type="hidden" name="_id" value={unit._id} />
+                    <input type="hidden" name="_csrf" value={props.csrf} />
+
+                </form>
             </div>
+
         );
     });
 
@@ -87,10 +85,12 @@ const UnitList = function (props) {
 };
 
 const loadUnitsFromServer = () => {
-    sendAjax('GET', '/getUnits', null, (data) => {
-        ReactDOM.render(
-            <UnitList units={data.units} />, document.querySelector("#units")
-        );
+    sendAjax('GET', '/getToken', null, (result) => {
+        sendAjax('GET', '/getUnits', null, (data) => {
+            ReactDOM.render(
+                <UnitList units={data.units} csrf={result.csrfToken} />, document.querySelector("#units")
+            );
+        });
     });
 };
 
@@ -109,8 +109,22 @@ const setup = function (csrf) {
 const getToken = () => {
     sendAjax('Get', '/getToken', null, (result) => {
         setup(result.csrfToken);
+       
     });
 };
+
+
+
+const deleteUnit = (e) => {
+    e.preventDefault();
+    sendAjax('DELETE', $("#unitDeleteForm").attr("action"), {_id: e.target._id.value, _csrf: e.target._csrf.value}, function () {
+        loadUnitsFromServer();
+    });
+
+    return false
+};
+
+
 
 $(document).ready(function () {
     getToken();
