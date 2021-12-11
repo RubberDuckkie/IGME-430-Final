@@ -1,4 +1,4 @@
-
+//handles errors with the login form
 const handleLogin = (e) => {
     e.preventDefault();
 
@@ -14,6 +14,7 @@ const handleLogin = (e) => {
     return false;
 };
 
+//handles errors with the signup form
 const handleSignup = (e) => {
     console.log($("#signupForm").serialize());
     e.preventDefault();
@@ -34,6 +35,7 @@ const handleSignup = (e) => {
     return false;
 };
 
+//handles errors with the change form
 const handleChange = (e) => {
     console.log($("#changeForm").serialize());
     e.preventDefault();
@@ -54,6 +56,7 @@ const handleChange = (e) => {
     return false;
 };
 
+//The login form that allows a user to use the application
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" name="loginForm"
@@ -77,6 +80,7 @@ const LoginWindow = (props) => {
     );
 };
 
+//the signup form that allows a user to apply to use the application
 const SignupWindow = (props) => {
     return (
         <form id="signupForm" 
@@ -103,6 +107,7 @@ const SignupWindow = (props) => {
     );
 };
 
+//the change form that allows a user to change their password to something more favorable
 const ChangeWindow = (props) => {
     return (
         <form id="changeForm" 
@@ -134,7 +139,7 @@ const ChangeWindow = (props) => {
     );
 };
 
-
+//creates the window to login
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -142,6 +147,7 @@ const createLoginWindow = (csrf) => {
     );
 };
 
+//creates the window in order to signup
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
         <SignupWindow csrf={csrf} />,
@@ -149,6 +155,7 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+//creates the change password window
 const createChangeWindow = (csrf) => {
     ReactDOM.render(
         <ChangeWindow csrf={csrf} />,
@@ -156,6 +163,7 @@ const createChangeWindow = (csrf) => {
     );
 };
 
+//general assembly
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
@@ -181,6 +189,8 @@ const setup = (csrf) => {
 
     createLoginWindow(csrf);
 };
+
+//obtains a user's csrf token
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);

@@ -1,5 +1,6 @@
 "use strict";
 
+//handles the login functions with error handling and makes the login form
 var handleLogin = function handleLogin(e) {
   e.preventDefault();
 
@@ -12,7 +13,7 @@ var handleLogin = function handleLogin(e) {
   sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
   return false;
 };
-
+//handles the signup functions with error handling and makes the signup form
 var handleSignup = function handleSignup(e) {
   console.log($("#signupForm").serialize());
   e.preventDefault();
@@ -32,6 +33,7 @@ var handleSignup = function handleSignup(e) {
   return false;
 };
 
+//handles the change functions with error handling and makes the change form
 var handleChange = function handleChange(e) {
   console.log($("#changeForm").serialize());
   e.preventDefault();
@@ -51,6 +53,7 @@ var handleChange = function handleChange(e) {
   return false;
 };
 
+//makes the loginWindow
 var LoginWindow = function LoginWindow(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "loginForm",
@@ -86,6 +89,7 @@ var LoginWindow = function LoginWindow(props) {
   }));
 };
 
+//makes the signup form 
 var SignupWindow = function SignupWindow(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "signupForm",
@@ -126,6 +130,7 @@ var SignupWindow = function SignupWindow(props) {
   }));
 };
 
+//makes the change password form
 var ChangeWindow = function ChangeWindow(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "changeForm",
@@ -173,24 +178,28 @@ var ChangeWindow = function ChangeWindow(props) {
   }));
 };
 
+//creates the login window
 var createLoginWindow = function createLoginWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(LoginWindow, {
     csrf: csrf
   }), document.querySelector("#content"));
 };
 
+//creates the signup window
 var createSignupWindow = function createSignupWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(SignupWindow, {
     csrf: csrf
   }), document.querySelector("#content"));
 };
 
+//creates the change password window
 var createChangeWindow = function createChangeWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(ChangeWindow, {
     csrf: csrf
   }), document.querySelector("#content"));
 };
 
+//the setup fucntiont hat brings all of the forms together
 var setup = function setup(csrf) {
   var loginButton = document.querySelector("#loginButton");
   var signupButton = document.querySelector("#signupButton");
@@ -213,6 +222,7 @@ var setup = function setup(csrf) {
   createLoginWindow(csrf);
 };
 
+//gets the user's csrf token
 var getToken = function getToken() {
   sendAjax('GET', '/getToken', null, function (result) {
     setup(result.csrfToken);
@@ -224,14 +234,17 @@ $(document).ready(function () {
 });
 "use strict";
 
+//handles errors for
 var handleError = function handleError(message) {
   $("#errorMessage").text(message);
 };
 
+//brings them to another page
 var redirect = function redirect(response) {
   window.location = response.redirect;
 };
 
+//sends an ajax form
 var sendAjax = function sendAjax(type, action, data, success) {
   $.ajax({
     cache: false,

@@ -3,6 +3,7 @@ const models = require('../models');
 
 const { Unit } = models;
 
+//creates the page with all the units
 const teamPage = (req, res) => {
   Unit.UnitModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -13,6 +14,7 @@ const teamPage = (req, res) => {
   });
 };
 
+//creates a unit and adds it to the unitlist
 const makeUnit = (req, res) => {
   if (!req.body.name || !req.body.vision || !req.body.level || !req.body.weapon) {
     return res.status(400).json({ error: 'Name, vision, level, and weapon are required' });
@@ -44,6 +46,7 @@ const makeUnit = (req, res) => {
   return unitPromise;
 };
 
+//gets all the units from the user
 const getUnits = (request, response) => {
   const req = request;
   const res = response;
@@ -57,6 +60,7 @@ const getUnits = (request, response) => {
   });
 };
 
+//removes the unit from the user's database
 const deleteUnit = (request, response) => {
   const req = request;
   const res = response;

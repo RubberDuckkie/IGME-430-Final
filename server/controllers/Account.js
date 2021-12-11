@@ -1,3 +1,4 @@
+//importing files
 const models = require('../models');
 const { AccountModel } = require('../models/Account');
 
@@ -25,11 +26,13 @@ const getToken = (request, response) => {
   res.json(csrfJSON);
 };
 
+//ends the session for the user
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
 };
 
+//logs the user into the application
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -53,6 +56,7 @@ const login = (request, response) => {
   });
 };
 
+//adds the user to the data base
 const signup = (request, response) => {
   const req = request;
   const res = response;
@@ -98,6 +102,7 @@ const signup = (request, response) => {
   });
 };
 
+//changes the password for the account
 const changePass = (request, response) => {
   const req = request;
   const res = response;

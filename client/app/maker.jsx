@@ -1,3 +1,4 @@
+//Handles errors when it comes to the unit form
 const handleUnit = (e) => {
     e.preventDefault();
 
@@ -14,6 +15,7 @@ const handleUnit = (e) => {
     return false;
 };
 
+//the form itself to create units and add them to the Unit List
 const UnitForm = (props) => {
     return (
 
@@ -37,7 +39,7 @@ const UnitForm = (props) => {
     );
 };
 
-
+//A list that displays all the units owned by the user 
 const UnitList = function (props) {
 
     if (props.units.length === 0) {
@@ -86,6 +88,7 @@ const UnitList = function (props) {
     );
 };
 
+//A function that loads all the units owned by the person from the server
 const loadUnitsFromServer = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         sendAjax('GET', '/getUnits', null, (data) => {
@@ -96,6 +99,7 @@ const loadUnitsFromServer = () => {
     });
 };
 
+//general assembly
 const setup = function (csrf) {
     ReactDOM.render(
         <UnitForm csrf={csrf} />, document.querySelector("#makeUnit")
@@ -108,6 +112,7 @@ const setup = function (csrf) {
     loadUnitsFromServer();
 };
 
+//gets the user's csrf token
 const getToken = () => {
     sendAjax('Get', '/getToken', null, (result) => {
         setup(result.csrfToken);
@@ -116,7 +121,7 @@ const getToken = () => {
 };
 
 
-
+//removes the unit form the user's account
 const deleteUnit = (e) => {
     e.preventDefault();
     sendAjax('DELETE', $("#unitDeleteForm").attr("action"), { _id: e.target._id.value, _csrf: e.target._csrf.value }, function () {

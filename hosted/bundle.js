@@ -1,5 +1,6 @@
 "use strict";
 
+//handles part of the unit form
 var handleUnit = function handleUnit(e) {
   e.preventDefault();
 
@@ -14,6 +15,7 @@ var handleUnit = function handleUnit(e) {
   return false;
 };
 
+//Makes the unit form to add to the database
 var UnitForm = function UnitForm(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "unitForm",
@@ -53,6 +55,7 @@ var UnitForm = function UnitForm(props) {
   }));
 };
 
+//displays the units made by the ownder
 var UnitList = function UnitList(props) {
   if (props.units.length === 0) {
     return /*#__PURE__*/React.createElement("div", {
@@ -104,6 +107,7 @@ var UnitList = function UnitList(props) {
   }, unitNodes);
 };
 
+//loads all the units made the user
 var loadUnitsFromServer = function loadUnitsFromServer() {
   sendAjax('GET', '/getToken', null, function (result) {
     sendAjax('GET', '/getUnits', null, function (data) {
@@ -115,6 +119,7 @@ var loadUnitsFromServer = function loadUnitsFromServer() {
   });
 };
 
+//develops all of the units
 var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(UnitForm, {
     csrf: csrf
@@ -125,12 +130,14 @@ var setup = function setup(csrf) {
   loadUnitsFromServer();
 };
 
+//gets the csrf token
 var getToken = function getToken() {
   sendAjax('Get', '/getToken', null, function (result) {
     setup(result.csrfToken);
   });
 };
 
+//removes the unit from the user's database
 var deleteUnit = function deleteUnit(e) {
   e.preventDefault();
   sendAjax('DELETE', $("#unitDeleteForm").attr("action"), {
@@ -147,14 +154,17 @@ $(document).ready(function () {
 });
 "use strict";
 
+//handles errors
 var handleError = function handleError(message) {
   $("#errorMessage").text(message);
 };
 
+//brings the user to another page
 var redirect = function redirect(response) {
   window.location = response.redirect;
 };
 
+//sends an ajax form
 var sendAjax = function sendAjax(type, action, data, success) {
   $.ajax({
     cache: false,

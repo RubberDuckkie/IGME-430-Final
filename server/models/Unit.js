@@ -8,6 +8,7 @@ let UnitModel = {};
 const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
+//Data of a unit
 const UnitSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -50,6 +51,7 @@ UnitSchema.statics.toAPI = (doc) => ({
 
 });
 
+//function to be able to find the unit via owner
 UnitSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
@@ -58,6 +60,7 @@ UnitSchema.statics.findByOwner = (ownerId, callback) => {
   return UnitModel.find(search).select('name vision level weapon').lean().exec(callback);
 };
 
+//deletes the unit from the user's account
 UnitSchema.statics.delete = (id, callback) => {
   const search = {
     _id: id,
