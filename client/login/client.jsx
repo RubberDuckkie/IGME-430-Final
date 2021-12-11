@@ -71,7 +71,7 @@ const LoginWindow = (props) => {
            <label htmlFor="pass" className="loginText">Password</label>
            <br></br>
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <input className="formSubmit" type="submit" value="Sign In" />
 
         </form>
     );
@@ -98,7 +98,7 @@ const SignupWindow = (props) => {
             <label htmlFor="pass2">Confirm Password</label>
             <br></br>
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign up" />
+            <input className="formSubmit" type="submit" value="Sign Up" />
         </form>
     );
 };
@@ -119,15 +119,15 @@ const ChangeWindow = (props) => {
             <br></br>
             <input id="oldPass" type="password" name="oldPass" placeholder="old password" />
             <br></br>
-            <label htmlFor="oldPass">Old Password: </label>
+            <label htmlFor="oldPass">Old Password</label>
             <br></br>
             <input id="pass" type="password" name="pass" placeholder="password" />
             <br></br>
-            <label htmlFor="pass">New Password: </label>
+            <label htmlFor="pass">New Password</label>
             <br></br>
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <br></br>
-            <label htmlFor="pass2">Password: </label>
+            <label htmlFor="pass2">New Password 2</label>
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="passSubmit" type="submit" value="Change Password" />
         </form>
