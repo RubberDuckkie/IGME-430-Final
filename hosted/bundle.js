@@ -67,25 +67,26 @@ var UnitList = function UnitList(props) {
       key: unit._id,
       className: "unit"
     }, /*#__PURE__*/React.createElement("img", {
-      src: "/Media/imgs/primogem.png",
+      src: "/assets/img/character_icon.png",
       alt: "primogem",
-      className: "unitFace"
+      className: "unitFace Icon"
     }), /*#__PURE__*/React.createElement("h3", {
-      className: "unitName"
+      className: "unitName Name"
     }, " Name: ", unit.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "unitVision"
+      className: "unitVision Vision"
     }, " Vision: ", unit.vision, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "unitLevel"
+      className: "unitLevel Level"
     }, " Level: ", unit.level, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "unitWeapon"
+      className: "unitWeapon Weapon"
     }, " Weapon: ", unit.weapon, " "), /*#__PURE__*/React.createElement("form", {
       id: "unitDeleteForm",
+      className: "Delete",
       onSubmit: deleteUnit,
       name: "unitDeleteForm",
       action: "/delete",
       method: "DELETE"
     }, /*#__PURE__*/React.createElement("input", {
-      className: "makeUnitSubmit",
+      className: "makeUnitSubmit Delete",
       type: "submit",
       value: "Delete Unit"
     }), /*#__PURE__*/React.createElement("input", {

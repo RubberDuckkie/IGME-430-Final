@@ -32,6 +32,25 @@ var handleSignup = function handleSignup(e) {
   return false;
 };
 
+var handleChange = function handleChange(e) {
+  console.log($("#changeForm").serialize());
+  e.preventDefault();
+
+  if ($("#user").val() == '' || $("#newpass").val() == '' || $("#newpass2").val() == '') {
+    handleError("All fields are required");
+    return false;
+  }
+
+  if ($("#newpass").val() !== $("#newpass2").val()) {
+    console.log($("pass").val(), $("#pass2").val());
+    handleError("Passwords do not match");
+    return false;
+  }
+
+  sendAjax('POST', $("#changeForm").attr("action"), $("#changeForm").serialize(), redirect);
+  return false;
+};
+
 var LoginWindow = function LoginWindow(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "loginForm",
@@ -40,21 +59,23 @@ var LoginWindow = function LoginWindow(props) {
     action: "/login",
     method: "POST",
     className: "mainForm"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("input", {
     id: "user",
     type: "text",
     name: "username",
     placeholder: "username"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "pass"
-  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username",
+    className: "loginText"
+  }, "Username"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
     id: "pass",
     type: "password",
     name: "pass",
     placeholder: "password"
-  }), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass",
+    className: "loginText"
+  }, "Password"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
     value: props.csrf
@@ -73,28 +94,28 @@ var SignupWindow = function SignupWindow(props) {
     action: "/signup",
     method: "POST",
     className: "mainForm"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("input", {
     id: "user",
     type: "text",
     name: "username",
     placeholder: "username"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "pass"
-  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
     id: "pass",
     type: "password",
     name: "pass",
     placeholder: "password"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "pass2"
-  }, "Confirm Password: "), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
     id: "pass2",
     type: "password",
     name: "pass2",
     placeholder: "password"
-  }), /*#__PURE__*/React.createElement("input", {
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass2"
+  }, "Confirm Password: "), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
     value: props.csrf
@@ -102,6 +123,46 @@ var SignupWindow = function SignupWindow(props) {
     className: "formSubmit",
     type: "submit",
     value: "Sign up"
+  }));
+};
+
+var ChangeWindow = function ChangeWindow(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "changeForm",
+    name: "changeForm",
+    onSubmit: handleChange,
+    action: "/passchange",
+    method: "POST",
+    className: "mainForm"
+  }, /*#__PURE__*/React.createElement("input", {
+    id: "user",
+    type: "text",
+    name: "username",
+    placeholder: "username"
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+    id: "newpass",
+    type: "password",
+    name: "pass",
+    placeholder: "password"
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newpass"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
+    id: "newpass2",
+    type: "password",
+    name: "pass2",
+    placeholder: "password"
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newpass2"
+  }, "Confirm Password: "), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "formSubmit",
+    type: "submit",
+    value: "Change Password"
   }));
 };
 
@@ -117,9 +178,16 @@ var createSignupWindow = function createSignupWindow(csrf) {
   }), document.querySelector("#content"));
 };
 
+var createChangeWindow = function createChangeWindow(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(ChangeWindow, {
+    csrf: csrf
+  }), document.querySelector("#content"));
+};
+
 var setup = function setup(csrf) {
   var loginButton = document.querySelector("#loginButton");
   var signupButton = document.querySelector("#signupButton");
+ 
   signupButton.addEventListener("click", function (e) {
     e.preventDefault();
     createSignupWindow(csrf);
@@ -130,6 +198,7 @@ var setup = function setup(csrf) {
     createLoginWindow(csrf);
     return false;
   });
+ 
   createLoginWindow(csrf);
 };
 

@@ -33,13 +33,12 @@ const UnitSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  
+
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
     ref: 'Account',
   },
-
 
 });
 
@@ -55,7 +54,7 @@ UnitSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
-    console.log('search', search)
+  console.log('search', search);
   return UnitModel.find(search).select('name vision level weapon').lean().exec(callback);
 };
 
@@ -63,10 +62,9 @@ UnitSchema.statics.delete = (id, callback) => {
   const search = {
     _id: id,
   };
-    console.log('search', search)
-    UnitModel.deleteOne(search).lean().exec(callback);;
+  console.log('search', search);
+  UnitModel.deleteOne(search).lean().exec(callback);
 };
-
 
 UnitModel = mongoose.model('Unit', UnitSchema);
 

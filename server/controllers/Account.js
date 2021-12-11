@@ -1,11 +1,19 @@
 const models = require('../models');
+const { AccountModel } = require('../models/Account');
 
 const { Account } = models;
 
+//creates the login page
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+//supposidly is the change password page
+const changePage = (req, res) =>{
+  res.render('change', {csrfToken : req.csrfToken() });
+};
+
+//gets a csrf token
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -31,12 +39,12 @@ const login = (request, response) => {
   const password = `${req.body.pass}`;
 
   if (!username || !password) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'All fields are required.' });
   }
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
     if (err || !account) {
-      return res.status(401).json({ error: 'Wrong username or password' });
+      return res.status(401).json({ error: 'Wrong username or password.' });
     }
 
     req.session.account = Account.AccountModel.toAPI(account);
@@ -75,7 +83,7 @@ const signup = (request, response) => {
 
     savePromise.then(() => {
       res.json({ redirect: '/maker' });
-      //return res.json({ redirect: '/maker' });
+      // return res.json({ redirect: '/maker' });
     });
 
     savePromise.catch((err) => {
@@ -90,8 +98,52 @@ const signup = (request, response) => {
   });
 };
 
+const changePass = (request, response) => {
+  const req = request;
+  const res = response;
+
+  // cast to strings to cover up some security flaws
+  req.body.username = `${req.body.username}`;
+  req.body.oldpass = `${req.body.oldpass}`;
+  req.body.newpass = `${req.body.newpass}`;
+  req.body.newpass2 = `${req.body.newpass2}`;
+
+  if (!req.body.username || !req.body.oldpass || !req.body.newpass || !req.body.newpass2) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  if (req.body.newpass !== req.body.newpass2) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  return Account.AccountModel.authenticate(req.body.username, req.body.oldpass, (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Wrong username or password.' });
+    };
+
+    return Account.AccountModel.generateHash(req.body.newpass, (salt, hash) =>{
+      const edits = account;
+        edits.salt = salt;
+        edits.password = hash;
+      
+      
+      const edtitedAcc = account.save();
+      edtitedAcc.then(()=> {
+      res.json({redirect : '/maker'});
+      });
+    });
+
+    
+  
+  });
+
+    
+};
+
+
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.getToken = getToken;
 module.exports.signup = signup;
+module.exports.changePass = changePass;

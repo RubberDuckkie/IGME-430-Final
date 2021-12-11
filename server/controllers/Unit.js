@@ -14,7 +14,7 @@ const teamPage = (req, res) => {
 };
 
 const makeUnit = (req, res) => {
-  if (!req.body.name || !req.body.vision || !req.body.level || !req.body.weapon)   {
+  if (!req.body.name || !req.body.vision || !req.body.level || !req.body.weapon) {
     return res.status(400).json({ error: 'Name, vision, level, and weapon are required' });
   }
 
@@ -25,8 +25,6 @@ const makeUnit = (req, res) => {
     weapon: req.body.weapon,
     owner: req.session.account._id,
   };
-
-
 
   const newUnit = new Unit.UnitModel(UnitData);
 
@@ -59,7 +57,7 @@ const getUnits = (request, response) => {
   });
 };
 
-const deleteUnit  = (request, response) => {
+const deleteUnit = (request, response) => {
   const req = request;
   const res = response;
 
@@ -71,7 +69,6 @@ const deleteUnit  = (request, response) => {
     return res.json({ UnitList: docs });
   });
 };
-
 
 module.exports.teamPage = teamPage;
 module.exports.getUnits = getUnits;
